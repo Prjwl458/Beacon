@@ -27,11 +27,12 @@ Designed for individuals who receive suspicious messages and want a quick, relia
 - **Server Gate Logic** — Blocks analysis when server unavailable (prevents errors)
 - **Premium UI** — Clean, responsive design that scales across all device sizes
 
+
 ---
 
 ## Screenshots
+![ Image 2026-03-11 at 20 01 01](https://github.com/user-attachments/assets/d78d2351-a09d-40e0-b347-07bd18214607)
 
-<!-- Add screenshots here -->
 
 ---
 
