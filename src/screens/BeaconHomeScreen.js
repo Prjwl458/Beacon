@@ -16,6 +16,7 @@ import {
   Clipboard,
   LayoutAnimation,
   InteractionManager,
+  ActivityIndicator,
 } from 'react-native';
 import { useRouter, useFocusEffect } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -451,12 +452,18 @@ const ManualAnalysisCard = React.memo(({
         <TouchableOpacity
           style={[styles.analyzeButton, !inputText.trim() && styles.analyzeButtonDisabled]}
           onPress={onAnalyze}
-          disabled={!inputText.trim()}
+          disabled={!inputText.trim() || isAnalyzing}
           activeOpacity={0.9}
         >
           <View style={styles.analyzeButtonContent}>
-            <MaterialCommunityIcons name="shield-check" size={20} color="#FFFFFF" />
-            <Text style={styles.analyzeButtonText}>Run Analysis</Text>
+            {isAnalyzing ? (
+              <ActivityIndicator size="small" color="#FFFFFF" />
+            ) : (
+              <>
+                <MaterialCommunityIcons name="shield-check" size={20} color="#FFFFFF" />
+                <Text style={styles.analyzeButtonText}>Run Analysis</Text>
+              </>
+            )}
           </View>
         </TouchableOpacity>
       )}
@@ -557,11 +564,13 @@ const ScanResultCard = ({ analysisKey, result, inputText, lastAnalyzedText, onRe
 
     // HIGH RISK / PHISHING DETECTED
     if (score >= 70 || intel.isPhishing) {
-      signals.push({ icon: 'alert-circle', label: 'Phishing Detected' });
-
+      // Show scamType OR "Phishing Detected" — never both
       if (intel.scamType) {
         signals.push({ icon: 'shield-alert', label: intel.scamType });
+      } else {
+        signals.push({ icon: 'alert-circle', label: 'Phishing Detected' });
       }
+
       if (intel.urgencyLevel === 'High') {
         signals.push({ icon: 'alert', label: 'High Urgency' });
       } else if (intel.urgencyLevel === 'Medium') {
@@ -573,15 +582,9 @@ const ScanResultCard = ({ analysisKey, result, inputText, lastAnalyzedText, onRe
       if (intel.upiIds?.length > 0) {
         signals.push({ icon: 'account-cash', label: `${intel.upiIds.length} UPI ID${intel.upiIds.length > 1 ? 's' : ''}` });
       }
-      if (intel.bankAccounts?.length > 0) {
-        signals.push({ icon: 'bank', label: `${intel.bankAccounts.length} Bank Account${intel.bankAccounts.length > 1 ? 's' : ''}` });
-      }
-      if (intel.suspiciousKeywords?.length > 0) {
-        signals.push({ icon: 'text-search', label: `${intel.suspiciousKeywords.length} Suspicious Keyword${intel.suspiciousKeywords.length > 1 ? 's' : ''}` });
-      }
 
-      // Return signals if any, otherwise empty array
-      return signals;
+      // Cap at 4 signals max
+      return signals.slice(0, 4);
     }
 
     // MEDIUM RISK (30-69)
@@ -590,11 +593,8 @@ const ScanResultCard = ({ analysisKey, result, inputText, lastAnalyzedText, onRe
       if (intel.phishingLinks?.length > 0) {
         signals.push({ icon: 'link-variant', label: 'Links Detected' });
       }
-      if (intel.suspiciousKeywords?.length > 0) {
-        signals.push({ icon: 'text-search', label: 'Suspicious Keywords' });
-      }
-      // Return signals if any, otherwise empty array
-      return signals;
+      // Cap at 4 signals max
+      return signals.slice(0, 4);
     }
 
     // LOW RISK (0-29) - SAFE - Return empty, never show "No Threats" guess

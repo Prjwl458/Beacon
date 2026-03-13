@@ -111,7 +111,7 @@ ${item.agentNotes || item.intelligence?.agentNotes || 'No specific findings'}
 Response Time: ${item.latency_ms ?? item.intelligence?.latency_ms ?? '--'}ms
 Analyzed:      ${formattedDate}
 ─────────────────────────
-Beacon v${item.version ?? '1.2.0'} · beacon-app
+Beacon v${item.version ?? '1.2.2'} · beacon-app
 ─────────────────────────`;
   };
 
@@ -140,114 +140,115 @@ Beacon v${item.version ?? '1.2.0'} · beacon-app
   return (
     <>
       {/* Main Modal */}
-      <Modal visible={visible} transparent animationType="none">
-        <Animated.View style={[styles.overlay, { opacity: opacityAnim }]} />
-        <Animated.View style={[styles.modalContent, { transform: [{ translateY: slideAnim }] }]}>
-          {/* Drag Handle */}
-          <View style={styles.dragHandleContainer}>
-            <View style={styles.dragHandle} />
-          </View>
-
-          {/* Header */}
-          <View style={styles.header}>
-            <View style={[styles.iconContainer, { backgroundColor: risk.bg }]}>
-              <MaterialCommunityIcons name={risk.icon} size={48} color={risk.color} />
+      <Modal visible={visible} transparent={true} animationType="slide">
+        <View style={styles.modalBackground}>
+          <Animated.View style={[styles.modalContent, { transform: [{ translateY: slideAnim }] }]}>
+            {/* Drag Handle */}
+            <View style={styles.dragHandleContainer}>
+              <View style={styles.dragHandle} />
             </View>
-            <Text style={[styles.riskLabel, { color: risk.color }]}>{risk.label}</Text>
-            <Text style={styles.riskScore}>{item.riskScore ?? '--'}% Risk Score</Text>
-          </View>
 
-          {/* Scrollable Content */}
-          <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false} bounces={false}>
-            {/* Message */}
-            <View style={styles.section}>
-              <Text style={[styles.sectionTitle, { color: risk.color }]}>
-                {isHighRisk ? 'Phishing Attempt Detected' : isHighRisk === false && item.riskScore >= 40 ? 'Suspicious Pattern Found' : 'No Threats Detected'}
-              </Text>
-              <View style={styles.messageBox}>
-                <Text style={styles.messageText}>{item.originalText}</Text>
+            {/* Header */}
+            <View style={styles.header}>
+              <View style={[styles.iconContainer, { backgroundColor: risk.bg }]}>
+                <MaterialCommunityIcons name={risk.icon} size={48} color={risk.color} />
               </View>
+              <Text style={[styles.riskLabel, { color: risk.color }]}>{risk.label}</Text>
+              <Text style={styles.riskScore}>{item.riskScore ?? '--'}% Risk Score</Text>
             </View>
 
-            {/* Telemetry */}
-            <View style={styles.telemetrySection}>
-              <View style={styles.telemetryGrid}>
-                <View style={styles.telemetryItem}>
-                  <Text style={styles.telemetryLabel}>LATENCY</Text>
-                  <View style={styles.telemetryValueBox}>
-                    <Text style={styles.telemetryValue}>
-                      {(() => {
-                        // Try multiple sources for latency
-                        const latency = item.latency_ms ?? item.intelligence?.latency_ms ?? 0;
-                        return latency ? `${latency}ms` : '--';
-                      })()}
-                    </Text>
-                  </View>
-                </View>
-                <View style={styles.telemetryItem}>
-                  <Text style={styles.telemetryLabel}>TIME</Text>
-                  <View style={styles.telemetryValueBox}>
-                    <Text style={styles.telemetryValue}>
-                      {item.timestamp ? formatTimestamp(item.timestamp) : '--'}
-                    </Text>
-                  </View>
-                </View>
-              </View>
-            </View>
-
-            {/* Entities */}
-            {(item.upiIds?.length > 0 || item.bankNames?.length > 0) && (
+            {/* Scrollable Content */}
+            <ScrollView style={styles.scrollView} contentContainerStyle={{ paddingBottom: 16 }} showsVerticalScrollIndicator={false} bounces={false}>
+              {/* Message */}
               <View style={styles.section}>
-                <Text style={styles.sectionLabel}>Extracted Evidence</Text>
-                {item.upiIds?.map((upi, i) => (
-                  <View key={i} style={[styles.entityBox, { backgroundColor: colors.warning + '20' }]}>
-                    <MaterialCommunityIcons name="account-cash" size={20} color={colors.warning} />
-                    <View style={styles.entityContent}>
-                      <Text style={styles.entityLabel}>UPI ID</Text>
-                      <Text style={styles.entityValue}>{upi}</Text>
-                    </View>
-                  </View>
-                ))}
-                {item.bankNames?.map((bank, i) => (
-                  <View key={i} style={[styles.entityBox, { backgroundColor: colors.success + '20' }]}>
-                    <MaterialCommunityIcons name="bank" size={20} color={colors.success} />
-                    <View style={styles.entityContent}>
-                      <Text style={styles.entityLabel}>Bank Account</Text>
-                      <Text style={styles.entityValue}>{bank}</Text>
-                    </View>
-                  </View>
-                ))}
+                <Text style={[styles.sectionTitle, { color: risk.color }]}>
+                  {isHighRisk ? 'Phishing Attempt Detected' : isHighRisk === false && item.riskScore >= 40 ? 'Suspicious Pattern Found' : 'No Threats Detected'}
+                </Text>
+                <View style={styles.messageBox}>
+                  <Text style={styles.messageText}>{item.originalText}</Text>
+                </View>
               </View>
-            )}
-          </ScrollView>
 
-          {/* Action Buttons */}
-          <View style={styles.actionsContainer}>
-            {isHighRisk && (
-              <TouchableOpacity style={styles.reportButton} onPress={handleReportScam}>
-                <MaterialCommunityIcons name="flag-outline" size={20} color={colors.danger} />
-                <Text style={[styles.actionText, { color: colors.danger }]}>Report Scam</Text>
+              {/* Telemetry */}
+              <View style={styles.telemetrySection}>
+                <View style={styles.telemetryGrid}>
+                  <View style={styles.telemetryItem}>
+                    <Text style={styles.telemetryLabel}>LATENCY</Text>
+                    <View style={styles.telemetryValueBox}>
+                      <Text style={styles.telemetryValue}>
+                        {(() => {
+                          // Try multiple sources for latency
+                          const latency = item.latency_ms ?? item.intelligence?.latency_ms ?? 0;
+                          return latency ? `${latency}ms` : '--';
+                        })()}
+                      </Text>
+                    </View>
+                  </View>
+                  <View style={styles.telemetryItem}>
+                    <Text style={styles.telemetryLabel}>TIME</Text>
+                    <View style={styles.telemetryValueBox}>
+                      <Text style={styles.telemetryValue}>
+                        {item.timestamp ? formatTimestamp(item.timestamp) : '--'}
+                      </Text>
+                    </View>
+                  </View>
+                </View>
+              </View>
+
+              {/* Entities */}
+              {(item.upiIds?.length > 0 || item.bankNames?.length > 0) && (
+                <View style={styles.section}>
+                  <Text style={styles.sectionLabel}>Extracted Evidence</Text>
+                  {item.upiIds?.map((upi, i) => (
+                    <View key={i} style={[styles.entityBox, { backgroundColor: colors.warning + '20' }]}>
+                      <MaterialCommunityIcons name="account-cash" size={20} color={colors.warning} />
+                      <View style={styles.entityContent}>
+                        <Text style={styles.entityLabel}>UPI ID</Text>
+                        <Text style={styles.entityValue}>{upi}</Text>
+                      </View>
+                    </View>
+                  ))}
+                  {item.bankNames?.map((bank, i) => (
+                    <View key={i} style={[styles.entityBox, { backgroundColor: colors.success + '20' }]}>
+                      <MaterialCommunityIcons name="bank" size={20} color={colors.success} />
+                      <View style={styles.entityContent}>
+                        <Text style={styles.entityLabel}>Bank Account</Text>
+                        <Text style={styles.entityValue}>{bank}</Text>
+                      </View>
+                    </View>
+                  ))}
+                </View>
+              )}
+            </ScrollView>
+
+            {/* Action Buttons */}
+            <View style={styles.actionsContainer}>
+              {isHighRisk && (
+                <TouchableOpacity style={styles.reportButton} onPress={handleReportScam}>
+                  <MaterialCommunityIcons name="flag-outline" size={20} color={colors.danger} />
+                  <Text style={[styles.actionText, { color: colors.danger }]}>Report Scam</Text>
+                </TouchableOpacity>
+              )}
+
+              {/* Primary Button - Share for high risk, Close for others */}
+              <TouchableOpacity
+                style={[styles.primaryButton, { backgroundColor: isHighRisk ? colors.primary : colors.success }]}
+                onPress={isHighRisk ? handleShare : onClose}
+              >
+                <MaterialCommunityIcons name={isHighRisk ? 'share-variant' : 'check'} size={20} color="#FFFFFF" />
+                <Text style={styles.actionTextWhite}>{isHighRisk ? 'Share Analysis' : 'Close'}</Text>
               </TouchableOpacity>
-            )}
-            
-            {/* Primary Button - Share for high risk, Close for others */}
-            <TouchableOpacity
-              style={[styles.primaryButton, { backgroundColor: isHighRisk ? colors.primary : colors.success }]}
-              onPress={isHighRisk ? handleShare : onClose}
-            >
-              <MaterialCommunityIcons name={isHighRisk ? 'share-variant' : 'check'} size={20} color="#FFFFFF" />
-              <Text style={styles.actionTextWhite}>{isHighRisk ? 'Share Analysis' : 'Close'}</Text>
-            </TouchableOpacity>
-            
-            {/* Additional Close Button for High Risk */}
-            {isHighRisk && (
-              <TouchableOpacity style={styles.closeButton} onPress={onClose}>
-                <MaterialCommunityIcons name="close" size={20} color="#6B7280" />
-                <Text style={styles.closeButtonText}>Close</Text>
-              </TouchableOpacity>
-            )}
-          </View>
-        </Animated.View>
+
+              {/* Additional Close Button for High Risk */}
+              {isHighRisk && (
+                <TouchableOpacity style={styles.closeButton} onPress={onClose}>
+                  <MaterialCommunityIcons name="close" size={20} color="#6B7280" />
+                  <Text style={styles.closeButtonText}>Close</Text>
+                </TouchableOpacity>
+              )}
+            </View>
+          </Animated.View>
+        </View>
       </Modal>
 
       {/* Share Modal */}
@@ -280,23 +281,27 @@ Beacon v${item.version ?? '1.2.0'} · beacon-app
 
 // ─── Styles ──────────────────────────────────────────────────────────────────
 const styles = StyleSheet.create({
-  overlay: {
-    position: 'absolute',
-    top: 0, left: 0, right: 0, bottom: 0,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  modalBackground: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: 'flex-end',
   },
   modalContent: {
-    position: 'absolute',
-    bottom: 0, left: 0, right: 0,
     backgroundColor: '#FFFFFF',
     borderTopLeftRadius: wp(6),
     borderTopRightRadius: wp(6),
-    maxHeight: SCREEN_HEIGHT * 0.85,
+    maxHeight: SCREEN_HEIGHT * 0.90,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: -4 },
     shadowOpacity: 0.15,
     shadowRadius: 20,
     elevation: 8,
+  },
+  scrollView: {
+    flexShrink: 1,
+  },
+  scrollContent: {
+    flexGrow: 1,
   },
   dragHandleContainer: {
     alignItems: 'center',
@@ -335,9 +340,6 @@ const styles = StyleSheet.create({
     fontWeight: typography.fontWeight.bold,
     color: '#111827',
     letterSpacing: -1,
-  },
-  scrollView: {
-    flex: 1,
   },
   section: {
     padding: wp(5),
@@ -427,6 +429,7 @@ const styles = StyleSheet.create({
   },
   actionsContainer: {
     padding: wp(4),
+    paddingBottom: 24,
     borderTopWidth: 1,
     borderTopColor: '#F3F4F6',
     gap: wp(3),

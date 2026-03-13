@@ -2,7 +2,7 @@
 
 AI-powered phishing detection for mobile messages.
 
-**Version:** v1.2.0 &nbsp;|&nbsp; **Platform:** Android (Expo Managed Workflow)
+**Version:** v1.2.2 &nbsp;|&nbsp; **Platform:** Android (Expo Managed Workflow)
 
 ---
 

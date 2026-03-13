@@ -91,27 +91,23 @@ export const wakeUpServer = async (signal = null) => {
         lastPulseTimestamp = Date.now();
         return true;
       } catch (retryError) {
-        console.error('[API] Retry after rate limit failed:', retryError.message);
         return false;
       }
     }
 
     // Log detailed error for debugging
     if (error.code === 'ECONNABORTED') {
-      console.error('[API] Wake-up timeout (120s): Server took too long to respond - still spinning up');
       // Even if it timed out, the server might still be waking up - return true to let it continue
       lastPulseTimestamp = Date.now();
       return true;
     } else if (error.response?.status === 403) {
-      console.error('[API] Auth Error (403): Invalid API key');
+      // Auth error - invalid API key
     } else if (error.response?.status === 500) {
-      console.error('[API] Server Error (500): Internal server error');
+      // Server error
     } else if (!error.response) {
-      console.error('[API] Network error:', error.message);
-      console.error('[API] Check if the server URL is accessible:', BASE_URL);
+      // Network error
     } else {
-      console.error('[API] Wake-up error:', error.message);
-      console.error('[API] Error response:', error.response?.data);
+      // Other errors
     }
 
     return false;
@@ -122,7 +118,7 @@ export const wakeUpServer = async (signal = null) => {
  * Analyze a message for phishing detection.
  * Uses the /message endpoint with HoneypotRequest schema.
  * Implements AbortController for request cancellation.
- * Implements Zero-Null Policy for Backend Data Contract v1.2.0
+ * Implements Zero-Null Policy for Backend Data Contract v1.2.2
  *
  * @param {Object} params - Analysis parameters
  * @param {string} params.sessionId - Session identifier
@@ -134,17 +130,18 @@ export const wakeUpServer = async (signal = null) => {
 export const analyzeMessage = async (params, signal = null) => {
   // Generate Unix timestamp
   const timestamp = Math.floor(Date.now() / 1000);
-  
-  // Backend v1.2.0 payload structure
+
+  // Backend v1.2.2 payload structure
   const payload = {
     sessionId: params?.sessionId || `beacon_${Date.now()}`,
     message: {
-      sender: params?.message?.senderId || "user",
+      sender: "user",
       text: params?.message?.text || "",
-      timestamp: timestamp,
+      timestamp: Date.now(),
     },
+    conversationHistory: [],
     metadata: {
-      channel: params?.metadata?.channel || "sms",
+      channel: params?.metadata?.channel || "manual_entry",
       language: "English",
       locale: "IN",
     },
@@ -155,7 +152,7 @@ export const analyzeMessage = async (params, signal = null) => {
   try {
     const response = await apiClient.post('/message', payload, { signal });
 
-    // Zero-Null Policy: Backend Data Contract v1.2.0
+    // Zero-Null Policy: Backend Data Contract v1.2.2
     // Sanitize response to ensure no null values
     const responseData = response.data || {};
 

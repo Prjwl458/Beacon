@@ -36,6 +36,7 @@ const InfoCard = ({ children, callout }) => (
 // ─── About Screen Component ──────────────────────────────────────────────────
 const AboutScreen = () => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
+  const videoRef = useRef(null);
 
   useEffect(() => {
     Animated.timing(fadeAnim, {
@@ -70,13 +71,19 @@ const AboutScreen = () => {
           <View style={styles.section}>
             <View style={styles.logoContainer}>
               <Video
+                ref={videoRef}
                 source={require('../../assets/Beacon-logo-video.mp4')}
                 style={styles.logoVideo}
                 resizeMode={ResizeMode.CONTAIN}
-                shouldPlay
-                isLooping
+                shouldPlay={true}
+                isLooping={true}
                 isMuted={true}
                 useNativeControls={false}
+                onPlaybackStatusUpdate={(status) => {
+                  if (status.didJustFinish) {
+                    videoRef.current?.replayAsync();
+                  }
+                }}
               />
               <LinearGradient
                 colors={['transparent', '#F2F4F6']}
@@ -147,7 +154,7 @@ const AboutScreen = () => {
 
           {/* Version */}
           <View style={styles.versionContainer}>
-            <Text style={styles.versionText}>v1.2.0</Text>
+            <Text style={styles.versionText}>v1.2.2</Text>
           </View>
 
           {/* Bottom Padding */}

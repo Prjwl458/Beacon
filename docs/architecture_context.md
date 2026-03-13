@@ -1,6 +1,6 @@
 # Beacon Architecture Context
 
-## Version 1.2.0 — March 2026
+## Version 1.2.2 — March 2026
 
 ---
 
@@ -11,7 +11,7 @@
 | Attribute | Value |
 |-----------|-------|
 | **Name** | Beacon |
-| **Version** | 1.2.0 |
+| **Version** | 1.2.2 |
 | **Platform** | iOS + Android (Expo Managed Workflow) |
 | **Framework** | React Native 0.81.5 |
 | **Router** | Expo Router v6 (file-based navigation) |
@@ -52,7 +52,7 @@ D:\Projects\Beacon\
 │   │   └── useAnalysisHistory.js # History state management with AsyncStorage
 │   │
 │   ├── screens/                  # Screen components
-│   │   ├── BeaconHomeScreen.js   # Main analysis screen (v1.2.0)
+│   │   ├── BeaconHomeScreen.js   # Main analysis screen (v1.2.2)
 │   │   ├── HistoryScreen.js      # Analysis history view
 │   │   ├── AboutScreen.js        # About page with video logo
 │   │   └── SplashScreen.js       # App launch screen with animation
@@ -61,7 +61,7 @@ D:\Projects\Beacon\
 │   │   └── api.js                # Axios singleton (wakeUpServer, analyzeMessage)
 │   │
 │   ├── styles/                   # Theme & styling
-│   │   ├── beaconTheme.js        # v1.2.0 design tokens (colors, spacing, typography)
+│   │   ├── beaconTheme.js        # v1.2.2 design tokens (colors, spacing, typography)
 │   │   └── theme.js              # Legacy theme (deprecated, use beaconTheme)
 │   │
 │   ├── utils/                    # Helper functions
@@ -258,7 +258,7 @@ D:\Projects\Beacon\
 │                                                                             │
 │  Endpoints:                                                                 │
 │  • GET /          → Health check, triggers wake-up                         │
-│  • POST /message  → Phishing detection (v1.2.0)                            │
+│  • POST /message  → Phishing detection (v1.2.2)                            │
 │  • POST /report   → Report threat to database                             │
 │                                                                             │
 └─────────────────────────────────────────────────────────────────────────────┘
@@ -403,7 +403,7 @@ export const shadows = {
 
 ---
 
-## 5. KEY FEATURES (v1.2.0)
+## 5. KEY FEATURES (v1.2.2)
 
 ### Core Features
 
@@ -521,7 +521,7 @@ const RATE_LIMIT_COOLDOWN_MS = 5000; // 5 seconds
     extractedEntities: [...],
     latency_ms: 4603,
   },
-  version: "1.2.0",
+  version: "1.2.2",
   timestamp: "2026-03-07T20:26:57.332845",
 }
 ```
@@ -940,7 +940,7 @@ npx expo start --web
 
 ## 13. CHANGELOG
 
-### v1.2.0 (March 2026) — Current
+### v1.2.2 (March 2026) — Current
 
 **Added:**
 - ✅ Responsive design system (wp, hp, fp)

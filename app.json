@@ -2,7 +2,7 @@
   "expo": {
     "name": "Beacon",
     "slug": "beacon",
-    "version": "1.2.0",
+    "version": "1.2.2",
     "description": "AI-powered phishing detection app that analyzes messages for suspicious links, UPI IDs, and fraudulent patterns",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
