@@ -6,7 +6,7 @@
     "description": "AI-powered phishing detection app that analyzes messages for suspicious links, UPI IDs, and fraudulent patterns",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "userInterfaceStyle": "dark",
+    "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
       "image": "./assets/splash-icon.png",
@@ -20,22 +20,38 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#121212"
+        "backgroundColor": "#FFFFFF"
       },
       "package": "com.beacon.security"
     },
-    "web": {
-      "favicon": "./assets/favicon.png"
-    },
-    "plugins": [
-      "expo-router"
-    ],
-    "scheme": "beacon",
     "extra": {
-      "router": {},
       "eas": {
         "projectId": "c2a170e4-c7f4-4045-bb00-9cfc23a4f81e"
       }
+    }
+  },
+  "web": {
+    "favicon": "./assets/favicon.png"
+  },
+  "plugins": [
+    "expo-router",
+    [
+      "expo-splash-screen",
+      {
+        "backgroundColor": "#FFFFFF",
+        "image": "./assets/splash-icon.png",
+        "dark": {
+          "backgroundColor": "#FFFFFF",
+          "image": "./assets/splash-icon.png"
+        },
+        "imageWidth": 200
+      }
+    ]
+  ],
+  "extra": {
+    "router": {},
+    "eas": {
+      "projectId": "c2a170e4-c7f4-4045-bb00-9cfc23a4f81e"
     }
   }
 }
